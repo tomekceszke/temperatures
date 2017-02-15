@@ -14,6 +14,9 @@ from conf.private_settings import *
 from lib.common import *
 
 
+__author__ = "Tomasz Ceszke"
+
+
 class Sensor:
     def __init__(self):
         pass

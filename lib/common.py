@@ -1,11 +1,8 @@
 #!/usr/bin/python
-import os
 import socket
 import urllib
 
-import sys
-
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+__author__ = "Tomasz Ceszke"
 
 
 def read_temp_netcat(hostname, port):
