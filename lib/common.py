@@ -18,7 +18,11 @@ def read_temp_netcat(hostname, port):
 
 
 def read_temp_get(hostname):
-    temp = urllib.urlopen('http://' + hostname).read()
+    try:
+        temp = urllib.urlopen('http://' + hostname).read()
+    except IOError:
+        return {'value': 'U', 'error': 'IOError'}
+
     temp_f = float(temp.strip())
     if temp_f != 85.0:
         return {'value': temp_f, 'error': ''}
@@ -35,7 +39,10 @@ def netcat(hostname, port):
 
 
 def read_temp_local(path):
-    f = open(path, 'r')
+    try:
+        f = open(path, 'r')
+    except IOError:
+        return {'value': 'U', 'error': 'IOError'}
     lines = f.readlines()
     f.close()
     return parse_temp(lines)

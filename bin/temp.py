@@ -42,12 +42,16 @@ def check_temp(sensor, retry=False):
     error = temp_result['error']
 
     if value == 'U':
+        sys.stderr.write("Error sensor " + str(sensor) + ": " + error + "\n")
         if retry:
-            sys.stderr.write("Error " + sensor + ": " + error + "\n")
-        else:
-            sys.stderr.write("Repeat reading from sensor " + sensor + " reason: " + error + "\n")
+            # sys.stderr.write("Error sensor " + str(sensor) + ": " + error + "\n")
+            return
+
+    if error == 'CRC':
+            sys.stderr.write("Repeat reading from sensor " + str(sensor) + " reason: " + error + ". Next attempt in "+str(repeat_after_fail)+" seconds \n")
             time.sleep(repeat_after_fail)
             value = check_temp(sensor, True)
+
     return value
 
 
@@ -77,7 +81,7 @@ def update_thingspeak_db(living_temp, bedroom_temp, out_temp, power_temp):
 
 def prepare_field(value):
     if not isinstance(value, float):
-        sys.stderr.write("Value %s is not a float." % value)
+        # sys.stderr.write("Value %s is not a float.\n" % value)
         return "null"
     else:
         return round(value, 1)
@@ -86,8 +90,8 @@ def prepare_field(value):
 def main():
     living_t = check_temp(Sensor.IN_LIVING_ROOM)
     bedroom_t = check_temp(Sensor.IN_BEDROOM)
-    out_t = check_temp(Sensor.OUT)
-    power_t = check_temp(Sensor.POWER)
+    out_t = None # check_temp(Sensor.OUT)
+    power_t = None # check_temp(Sensor.POWER)
 
     # print "bedroom temp:" + str(bedroom_t)
     # print "in temp:" + str(in_t)
